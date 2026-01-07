@@ -22,6 +22,12 @@ class db {
             if (err)
                 throw err;
             console.log('Conexión a la base de datos establecida');
+            const checkUserRequest = new sql.Request(this.connection);
+            checkUserRequest.query("SELECT SYSTEM_USER AS CurrentUser, USER_NAME() AS CurrentDatabaseUser", (err, result) => {
+                if (!err && result.recordset) {
+                    console.log('Usuario de conexión:', result.recordset[0]);
+                }
+            });
         });
     }
     async execute(procedure, params) {

@@ -51,6 +51,7 @@ GRANT SELECT ON [dbo].[ahorrospermanentes] TO [fondoApp];
 GRANT SELECT ON [dbo].[AportesSociales] TO [fondoApp];
 GRANT SELECT ON [dbo].[ahorrosalavista] TO [fondoApp];
 GRANT SELECT ON [dbo].[ahorrosContractual] TO [fondoApp];
+GRANT SELECT ON [dbo].[resultadoscierreautomatico] TO [fondoApp];
 GO
 
 -- ============================================
@@ -73,6 +74,7 @@ GRANT EXECUTE ON [dbo].[GetEmailUser] TO [fondoApp];
 GRANT EXECUTE ON [dbo].[SaveUser] TO [fondoApp];
 GRANT EXECUTE ON [dbo].[GetCreditos] TO [fondoApp];
 GRANT EXECUTE ON [dbo].[GetAhorros] TO [fondoApp];
+GRANT EXECUTE ON [dbo].[GetFechaTrabajo] TO [fondoApp];
 GO
 
 -- Stored procedure externo (ejecutado desde GetNovedades)

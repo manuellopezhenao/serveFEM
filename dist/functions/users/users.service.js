@@ -28,7 +28,7 @@ let UsersService = UsersService_1 = class UsersService {
         this.serviciosExcelPath = path.join(process.cwd(), 'dist', 'servicios', 'servicios.xlsx');
     }
     async findOneUser(username) {
-        const query = `EXEC CheckUser @username = '${username}'`;
+        const query = `EXEC [dbo].[CheckUser] @username = '${username}'`;
         const user = await this.database.db.excuteQuery(query);
         return user;
     }
@@ -105,12 +105,22 @@ let UsersService = UsersService_1 = class UsersService {
             console.error('Error al obtener servicios:', error);
             servicios = [];
         }
+        let fechaTrabajo = null;
+        try {
+            const fechaTrabajoResult = await this.getFechaTrabajo('CAUSA-A');
+            fechaTrabajo = fechaTrabajoResult && fechaTrabajoResult.length > 0 ? fechaTrabajoResult[0] : null;
+        }
+        catch (error) {
+            console.error('Error al obtener fecha de trabajo:', error);
+            fechaTrabajo = null;
+        }
         return {
             usuario: usuario[0],
             ahorros,
             creditos,
             beneficiarios,
             servicios,
+            fechaTrabajo,
         };
     }
     async getServiciosFileStats() {
@@ -210,6 +220,11 @@ let UsersService = UsersService_1 = class UsersService {
         const query = `EXEC ResetPassword @cedula = '${cedula}', @password = '${await (0, encryp_data_1.encryptData)(password)}', @code = '${code}', @date = '${fecha}'`;
         const user = await this.database.db.excuteQuery(query);
         return user;
+    }
+    async getFechaTrabajo(proceso = 'CAUSA-A') {
+        const query = `EXEC GetFechaTrabajo @proceso = '${proceso}'`;
+        const fechaTrabajo = await this.database.db.excuteQuery(query);
+        return fechaTrabajo;
     }
 };
 exports.UsersService = UsersService;

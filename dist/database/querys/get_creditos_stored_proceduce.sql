@@ -27,7 +27,7 @@ SELECT
     d.nombredestino as nombreCredito
 FROM 
     creditos c
-    LEFT JOIN destinos d ON c.codlinea = d.Coddestino
+    LEFT JOIN destinos d ON c.coddestino = d.Coddestino
 WHERE 
     c.cedulasociado = @cedula 
     and c.saldocapital > 0;

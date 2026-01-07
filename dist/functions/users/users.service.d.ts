@@ -20,4 +20,5 @@ export declare class UsersService {
     getEmail(cedula: string): Promise<IRecordSet<any>>;
     saveCode(cedula: string, code: string): Promise<IRecordSet<any>>;
     resetPassword(cedula: string, password: string, code: string): Promise<IRecordSet<any>>;
+    getFechaTrabajo(proceso?: string): Promise<IRecordSet<any>>;
 }
