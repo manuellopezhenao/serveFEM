@@ -21,11 +21,10 @@ class db {
         this.connection.connect((err) => {
             if (err)
                 throw err;
-            console.log('Conexión a la base de datos establecida');
             const checkUserRequest = new sql.Request(this.connection);
             checkUserRequest.query("SELECT SYSTEM_USER AS CurrentUser, USER_NAME() AS CurrentDatabaseUser", (err, result) => {
-                if (!err && result.recordset) {
-                    console.log('Usuario de conexión:', result.recordset[0]);
+                if (err) {
+                    console.error('Error al verificar usuario de conexión:', err);
                 }
             });
         });
@@ -40,7 +39,7 @@ class db {
             return result.recordset;
         }
         catch (error) {
-            console.log('execute', error);
+            console.error('execute', error);
             throw new common_1.InternalServerErrorException(error);
         }
     }
@@ -51,15 +50,16 @@ class db {
             return result.recordset;
         }
         catch (error) {
-            console.log('excuteQuery', error);
+            console.error('excuteQuery', error);
             throw new common_1.InternalServerErrorException(error);
         }
     }
     disconnect() {
         this.connection.close((err) => {
-            if (err)
+            if (err) {
+                console.error('Error al cerrar la conexión a la base de datos:', err);
                 throw err;
-            console.log('Conexión a la base de datos cerrada');
+            }
         });
     }
 }

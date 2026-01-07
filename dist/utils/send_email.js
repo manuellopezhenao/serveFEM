@@ -98,9 +98,6 @@ const sendEmail = async (email, code, nombre) => {
             if (error) {
                 console.error(error);
             }
-            else {
-                console.log('Correo enviado:', info.response);
-            }
         });
     }
     catch (error) {

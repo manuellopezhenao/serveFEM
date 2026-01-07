@@ -21,7 +21,6 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
         this.cache = null;
         this.lastModifiedTime = null;
         this.excelFilePath = path.join(process.cwd(), 'dist', 'base_de_datos_consolidada.xlsx');
-        this.logger.log(`Excel file path: ${this.excelFilePath}`);
     }
     async getFileStats() {
         try {
@@ -46,14 +45,12 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
                 raw: false,
             });
             if (rows.length === 0) {
-                this.logger.warn('El archivo Excel está vacío');
                 return {};
             }
             const empleadosMap = {};
             for (const row of rows) {
                 const idEmpleado = String(row.id_empleado || '').trim();
                 if (!idEmpleado) {
-                    this.logger.warn(`Fila sin id_empleado omitida: ${JSON.stringify(row)}`);
                     continue;
                 }
                 if (!empleadosMap[idEmpleado]) {
@@ -78,7 +75,6 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
                 }
             }
             this.lastModifiedTime = stats.mtimeMs;
-            this.logger.log(`Archivo Excel cargado exitosamente. ${Object.keys(empleadosMap).length} empleados encontrados.`);
             return empleadosMap;
         }
         catch (error) {
@@ -90,7 +86,6 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
         const stats = await this.getFileStats();
         if (!stats) {
             if (this.cache !== null) {
-                this.logger.warn('El archivo Excel ya no existe. Limpiando caché.');
                 this.cache = null;
                 this.lastModifiedTime = null;
             }
@@ -99,25 +94,17 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
         if (this.cache === null ||
             this.lastModifiedTime === null ||
             stats.mtimeMs !== this.lastModifiedTime) {
-            if (this.cache !== null && this.lastModifiedTime !== null) {
-                this.logger.log(`Archivo Excel modificado detectado. Recargando caché de base_de_datos_consolidada.xlsx...`);
-            }
-            else {
-                this.logger.log('Cargando archivo Excel base_de_datos_consolidada.xlsx en caché...');
-            }
             this.cache = await this.loadExcelFile();
         }
     }
     async getBeneficiariosByIdEmpleado(idEmpleado) {
         await this.ensureCacheIsUpToDate();
         if (!this.cache) {
-            this.logger.warn('No hay datos en caché. Retornando array vacío.');
             return [];
         }
         const idEmpleadoNormalizado = String(idEmpleado || '').trim();
         const empleado = this.cache[idEmpleadoNormalizado];
         if (!empleado) {
-            this.logger.debug(`No se encontró empleado con ID: ${idEmpleadoNormalizado}`);
             return [];
         }
         return empleado.beneficiarios || [];
@@ -125,14 +112,12 @@ let EmployeeService = EmployeeService_1 = class EmployeeService {
     async getEmpleadoById(idEmpleado) {
         await this.ensureCacheIsUpToDate();
         if (!this.cache) {
-            this.logger.warn('No hay datos en caché. Retornando null.');
             return null;
         }
         const idEmpleadoNormalizado = String(idEmpleado || '').trim();
         return this.cache[idEmpleadoNormalizado] || null;
     }
     async forceReload() {
-        this.logger.log('Forzando recarga del archivo Excel...');
         this.cache = null;
         this.lastModifiedTime = null;
         await this.ensureCacheIsUpToDate();

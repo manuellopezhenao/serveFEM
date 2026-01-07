@@ -56,8 +56,6 @@ let UsersService = UsersService_1 = class UsersService {
             fullnamesinEspacios +
             "'";
         const newUser = await this.database.db.excuteQuery(query);
-        console.log(query);
-        console.log(query);
         return newUser;
     }
     async getIfo(cedula) {
@@ -148,7 +146,6 @@ let UsersService = UsersService_1 = class UsersService {
                 raw: false,
             });
             if (rows.length === 0) {
-                this.logger.warn('El archivo Excel de servicios está vacío');
                 return [];
             }
             const protocol = process.env.USE_HTTPS === 'true' ? 'https' : 'http';
@@ -168,7 +165,6 @@ let UsersService = UsersService_1 = class UsersService {
                 };
             });
             this.serviciosLastModifiedTime = stats.mtimeMs;
-            this.logger.log(`Archivo Excel de servicios cargado exitosamente. ${servicios.length} servicios encontrados.`);
             return servicios;
         }
         catch (error) {
@@ -180,7 +176,6 @@ let UsersService = UsersService_1 = class UsersService {
         const stats = await this.getServiciosFileStats();
         if (!stats) {
             if (this.serviciosCache !== null) {
-                this.logger.warn('El archivo Excel de servicios ya no existe. Limpiando caché.');
                 this.serviciosCache = null;
                 this.serviciosLastModifiedTime = null;
             }
@@ -189,19 +184,12 @@ let UsersService = UsersService_1 = class UsersService {
         if (this.serviciosCache === null ||
             this.serviciosLastModifiedTime === null ||
             stats.mtimeMs !== this.serviciosLastModifiedTime) {
-            if (this.serviciosCache !== null && this.serviciosLastModifiedTime !== null) {
-                this.logger.log(`Archivo Excel modificado detectado. Recargando caché de servicios.xlsx...`);
-            }
-            else {
-                this.logger.log('Cargando archivo Excel servicios.xlsx en caché...');
-            }
             this.serviciosCache = await this.loadServiciosExcel();
         }
     }
     async getServicios() {
         await this.ensureServiciosCacheIsUpToDate();
         if (!this.serviciosCache) {
-            this.logger.warn('No hay datos de servicios en caché. Retornando array vacío.');
             return [];
         }
         return this.serviciosCache;
