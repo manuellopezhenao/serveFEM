@@ -107,7 +107,7 @@ let UsersService = UsersService_1 = class UsersService {
         }
         let fechaTrabajo = null;
         try {
-            const fechaTrabajoResult = await this.getFechaTrabajo('CAUSA-A');
+            const fechaTrabajoResult = await this.getFechaTrabajo();
             fechaTrabajo = fechaTrabajoResult && fechaTrabajoResult.length > 0 ? fechaTrabajoResult[0] : null;
         }
         catch (error) {
@@ -221,8 +221,8 @@ let UsersService = UsersService_1 = class UsersService {
         const user = await this.database.db.excuteQuery(query);
         return user;
     }
-    async getFechaTrabajo(proceso = 'CAUSA-A') {
-        const query = `EXEC GetFechaTrabajo @proceso = '${proceso}'`;
+    async getFechaTrabajo() {
+        const query = `EXEC GetFechaTrabajo`;
         const fechaTrabajo = await this.database.db.excuteQuery(query);
         return fechaTrabajo;
     }
