@@ -108,7 +108,9 @@ let UsersService = UsersService_1 = class UsersService {
         let fechaTrabajo = null;
         try {
             const fechaTrabajoResult = await this.getFechaTrabajo();
-            fechaTrabajo = fechaTrabajoResult && fechaTrabajoResult.length > 0 ? fechaTrabajoResult[0] : null;
+            if (fechaTrabajoResult && fechaTrabajoResult.length > 0 && fechaTrabajoResult[0].fechatrabajo) {
+                fechaTrabajo = fechaTrabajoResult[0].fechatrabajo;
+            }
         }
         catch (error) {
             console.error('Error al obtener fecha de trabajo:', error);
