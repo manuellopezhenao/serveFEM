@@ -13,14 +13,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeService = void 0;
 const common_1 = require("@nestjs/common");
 const fs = require("fs");
-const path = require("path");
 const XLSX = require("xlsx");
 let EmployeeService = EmployeeService_1 = class EmployeeService {
     constructor() {
         this.logger = new common_1.Logger(EmployeeService_1.name);
         this.cache = null;
         this.lastModifiedTime = null;
-        this.excelFilePath = path.join(process.cwd(), 'dist', 'base_de_datos_consolidada.xlsx');
+        this.excelFilePath = '\\\\femdon\\Beneficiarios\\base_de_datos_consolidada.xlsx';
     }
     async getFileStats() {
         try {
